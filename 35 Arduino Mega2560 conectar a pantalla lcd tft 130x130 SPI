@@ -1,0 +1,83 @@
+/*
+    CONECTAR NUESTRO ARDUINO A UNA PANTALLA OLED DE COLOR CON CONTROLOADOR SSD1283A POR INTERFAZ SPI
+    AUTOR : JOSE MARIA MENDEZ RUIZ
+    NOVIEMBRE 2021
+
+    UTILIZO LAS LIBRERIAS DEL LCDWIKI
+    LAS DERCARGAIS Y COPIAIS LAS CARPETAS EN EL DIRECTORIO DONDE TENEIS LAS LIBRERIAS DE VUESTRO ARDUINO IDE, LAS CARPETAS SE TIENEN QUE LLAMAR EXACTAMENTE IGUAL A COMO ESTAN DECLARADAS , EL NOMBRE LO VEIS AL DESCARGARLAS
+    EN EL CURSO DE PROGRAMACION CON ARDUINO IDE PONDRE UN CAPITULO DEDICADO A COMO INSTALAR LAS LIBRERIAS EN EL ENTORNO DE PROGRAMACION 
+    
+    https://github.com/gitcnd/LCDWIKI_GUI
+    https://github.com/gitcnd/LCDWIKI_SPI
+       
+    CODIGO LIBRE PARA UTILIZAR COMO QUIERAS
+*/
+
+#include <LCDWIKI_GUI.h>     // librería gráfica
+#include <LCDWIKI_SPI.h>     // librería interfaz spi 
+
+#define MODEL SSD1283A   // El controlador que maneja el display
+#define CS 53            // El pin donde se conecta la CS del display
+#define CD 9             // El pin donde se conecta la CD del display
+#define SDA 51           // El pin donde se conecta la SDA del display
+#define MOSI SDA         // El pin donde se conecta la MOSI SDA del display
+#define SCK 52           // El pin donde se conecta la SCK del display
+#define RST 8            // El pin donde se conecta la RST del display
+#define LED -1           // Si no necesitamos manejar el LED ( encender o apagar el display) entonces lo conectamos a la VCC  ( 3.3 o 5 V )
+
+LCDWIKI_SPI milcd (MODEL,CS,CD, MISO, MOSI, RST, SCK, LED); // Llamamos al controlador y le asignamos el nombre que vamos a utilizar como objeto
+
+// Definimos los colores asignándole el valor hexadecimal del color , de manera que usaremos los colores en vez de las direcciones
+#define NEGRO 0x0000
+#define AZUL 0x001F
+#define ROJO 0xF800
+#define VERDE 0x07E0
+#define CELESTE 0x07FF
+#define VIOLETA 0xF81F
+#define AMARILLO 0xFFE0
+#define BLANCO 0xFFFF
+
+void setup()
+{
+milcd.Init_LCD ();
+milcd.Fill_Screen (NEGRO);
+}
+
+void loop ()
+{
+
+milcd.Fill_Screen (NEGRO);
+milcd.Set_Text_Back_colour (NEGRO); // para indicar el color de fondo que queremos
+
+// Para poner un texto
+milcd.Set_Text_Mode (0);
+milcd.Set_Text_colour (ROJO);
+milcd.Set_Text_Size (2);
+milcd.Print_String ("Hola Mundo", 10, 0);
+
+// Para hacer un rectángulo
+milcd.Set_Draw_color (BLANCO);
+milcd.Draw_Round_Rectangle (70,70,100,100,6);
+
+// Para hacer una linea vertical
+milcd.Set_Draw_color (VERDE);
+milcd.Draw_Fast_VLine (10,80,30);
+
+// Para hacer una linea horizontal
+milcd.Set_Draw_color (BLANCO);
+milcd.Draw_Fast_HLine (10,80,30);
+
+// Para hacer una linea 
+milcd.Set_Draw_color (ROJO);
+milcd.Draw_Line (125,125,20,70);
+
+// Para hacer un círculo
+milcd.Set_Draw_color (ROJO);
+milcd.Draw_Circle (80,40,16);
+
+// Para hacer un triángulo
+milcd.Set_Draw_color (CELESTE);
+milcd.Draw_Triangle (5,40, 15,90,50,16);
+
+delay (2000);
+}
